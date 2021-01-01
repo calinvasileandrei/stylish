@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:stylish/Utils/global.dart';
+import 'package:stylish/View/CreateClotheView/CreateClotheView.dart';
 
 import 'View/HomeView/HomeView.dart';
 
@@ -25,7 +26,7 @@ class _TabControllerAppState extends State<TabControllerApp> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      floatingActionButton: _buildFloatingActionButton(),
+      floatingActionButton: _buildFloatingActionButton(context),
       floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,
       body: DefaultTabController(
         length: 2,
@@ -36,7 +37,9 @@ class _TabControllerAppState extends State<TabControllerApp> {
             physics: const NeverScrollableScrollPhysics(),
             children: [
               new HomeView(),
-              new Container(color: Colors.blue,),
+              new Container(
+                color: Colors.blue,
+              ),
             ],
           ),
           backgroundColor: Theme.of(context).primaryColor,
@@ -60,7 +63,7 @@ class _TabControllerAppState extends State<TabControllerApp> {
               width: 50,
               child: Tab(
                 icon: new Icon(
-                  Icons.home ,
+                  Icons.home,
                   size: 30,
                 ),
               ),
@@ -73,7 +76,7 @@ class _TabControllerAppState extends State<TabControllerApp> {
               width: 50,
               child: Tab(
                 icon: new Icon(
-                  Icons.settings ,
+                  Icons.settings,
                   size: 30,
                 ),
               ),
@@ -89,7 +92,7 @@ class _TabControllerAppState extends State<TabControllerApp> {
     );
   }
 
-  Widget _buildFloatingActionButton() {
+  Widget _buildFloatingActionButton(BuildContext context) {
     //ListViewClothes l = new ListViewClothes();
     return Container(
       width: 180.w,
@@ -112,10 +115,12 @@ class _TabControllerAppState extends State<TabControllerApp> {
           color: Colors.white,
         ),
         onPressed: () {
-          //_insert();
+          Navigator.push(
+            context,
+            MaterialPageRoute(builder: (context) => new CreateClotheView()),
+          );
         },
       ),
     );
   }
 }
-
