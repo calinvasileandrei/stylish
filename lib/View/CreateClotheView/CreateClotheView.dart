@@ -1,4 +1,10 @@
+import 'dart:developer' as dv;
+import 'dart:math';
+
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/all.dart';
+import 'package:stylish/DB/DataAccessObject/CategoryDao.dart';
+import 'package:stylish/DB/DataAccessObject/ClotheDao.dart';
 import 'package:stylish/Models/Clothe.dart';
 import 'package:stylish/Utils/StylishSkeleton.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
@@ -6,6 +12,14 @@ import 'dart:convert';
 import 'dart:io';
 import 'dart:typed_data';
 import 'package:image_picker_modern/image_picker_modern.dart';
+
+
+
+final categoriesProvider = FutureProvider<List<String>>((ref) async{
+  CategoryDao categoryDao = new CategoryDao();
+  return await categoryDao.getAllCategoriesNames();
+
+});
 
 class CreateClotheView extends StatefulWidget {
   CreateClotheView({Key key}) : super(key: key);
@@ -20,7 +34,7 @@ class _CreateClotheViewState extends State<CreateClotheView> {
   TextEditingController _linkController;
   TextEditingController _imageController;
   String _image;
-  List _type = ["Hat", "T-shirt/Vests", "Trousers", "Shoes", "Accessories"];
+  List _categoriesTypes = ["Hat", "T-shirt/Vests", "Trousers", "Shoes", "Accessories"];
   List<DropdownMenuItem<String>> _dropDownMenuItems;
   String _currentType;
   Clothe newClothe = new Clothe("", "", "", "", "", "");
@@ -28,18 +42,18 @@ class _CreateClotheViewState extends State<CreateClotheView> {
   @override
   void initState() {
     super.initState();
-    _dropDownMenuItems = getDropDownMenuItems();
-
+    //_dropDownMenuItems = getDropDownMenuItems();
     _nameController = new TextEditingController(text: newClothe.name);
     _priceController = new TextEditingController(text: newClothe.price);
     _linkController = new TextEditingController(text: newClothe.link);
     _imageController = new TextEditingController(text: newClothe.image);
-    _currentType = _dropDownMenuItems[1].value;
+    //_currentType = _dropDownMenuItems[0].value;
   }
 
-  List<DropdownMenuItem<String>> getDropDownMenuItems() {
+
+  List<DropdownMenuItem<String>> getDropDownMenuItems(categories) {
     List<DropdownMenuItem<String>> items = new List();
-    for (String type in _type) {
+    for (String type in categories) {
       items.add(new DropdownMenuItem(value: type, child: new Text(type)));
     }
     return items;
@@ -51,7 +65,7 @@ class _CreateClotheViewState extends State<CreateClotheView> {
     });
   }
 
-  getImage() async {
+  void getImage() async {
     File image = await ImagePicker.pickImage(source: ImageSource.gallery);
     Uint8List bytes = image.readAsBytesSync();
     setState(() {
@@ -59,10 +73,17 @@ class _CreateClotheViewState extends State<CreateClotheView> {
     });
   }
 
-  removeImage() async {
+  void removeImage() async {
     setState(() {
       _image = null;
     });
+  }
+
+  void createClothe(BuildContext context) async{
+    ClotheDao clotheDao = new ClotheDao();
+    Clothe clothe = new Clothe(_nameController.text, _priceController.text, _linkController.text, _imageController.text, _image, _currentType);
+    await clotheDao.insert(clothe);
+    Navigator.pop(context);
   }
 
   @override
@@ -88,59 +109,63 @@ class _CreateClotheViewState extends State<CreateClotheView> {
       data: Theme.of(context).copyWith(
           primaryColor: Color(
               0xFFfa7b58)), //TODO: change this with a proper way, this is a fast way to set the input the round color border but not the best
-      child: Container(
-          child: Padding(
-              padding: EdgeInsets.only(left: 70.w, top: 0.h, right: 70.w),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.center,
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: <Widget>[
-                  _buildProductImage(),
-                  _formInput("Link", _linkController,
-                      suffix: IconButton(
-                        icon: Icon(Icons.content_paste),
-                        onPressed: () => {},
-                      )),
-                  _formInput("Name", _nameController),
-                  _formInput("Price", _priceController),
-                  (_image == null || _image == '')
-                      ? _formInput("Image", _imageController,
-                          suffix: IconButton(
-                            icon: Icon(Icons.image),
-                            tooltip: 'Pick Image',
-                            onPressed: getImage,
-                          ))
-                      : _formInput("Image", _imageController,
-                          suffix: IconButton(
+      child:Consumer(
+          builder: (context, watch, child) {
+            final categoriesAsyncValues = watch(categoriesProvider);
+            return categoriesAsyncValues.map(data:(_categories)=> Container(
+                child: Padding(
+                    padding: EdgeInsets.only(left: 70.w, top: 0.h, right: 70.w),
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.center,
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: <Widget>[
+                        _buildProductImage(),
+                        _formInput("Link", _linkController,
+                            suffix: IconButton(
+                              icon: Icon(Icons.content_paste),
+                              onPressed: () => {},
+                            )),
+                        _formInput("Name", _nameController),
+                        _formInput("Price", _priceController),
+                        (_image == null || _image == '')
+                            ? _formInput("Image", _imageController,
+                            suffix: IconButton(
                               icon: Icon(Icons.image),
                               tooltip: 'Pick Image',
-                              onPressed: removeImage)),
-                  Container(
-                    width: ScreenUtil().screenWidth * 0.9,
-                    padding: new EdgeInsets.fromLTRB(24.w, 48.h, 24.w, 48.h),
-                    child: Container(
-                      padding: new EdgeInsets.only(left: 50.w, right: 50.w),
-                      decoration: BoxDecoration(
-                        color: Colors.white,
-                        borderRadius: BorderRadius.circular(32.0),
-                        border: Border.all(
-                            color: Colors.grey,
-                            style: BorderStyle.solid,
-                            width: 3.w),
-                      ),
-                      child: DropdownButton<String>(
-                        hint: Text("Select a type"),
-                        value: _currentType,
-                        items: _dropDownMenuItems,
-                        isExpanded: true,
-                        onChanged: changedDropDownItem,
-                      ),
-                    ),
-                  ),
-                  _buildCreateButton("Create"),
-                ],
-              ))),
-    );
+                              onPressed: getImage,
+                            ))
+                            : _formInput("Image", _imageController,
+                            suffix: IconButton(
+                                icon: Icon(Icons.image),
+                                tooltip: 'Pick Image',
+                                onPressed: removeImage)),
+                        Container(
+                          width: ScreenUtil().screenWidth * 0.9,
+                          padding: new EdgeInsets.fromLTRB(24.w, 48.h, 24.w, 48.h),
+                          child: Container(
+                            padding: new EdgeInsets.only(left: 50.w, right: 50.w),
+                            decoration: BoxDecoration(
+                              color: Colors.white,
+                              borderRadius: BorderRadius.circular(32.0),
+                              border: Border.all(
+                                  color: Colors.grey,
+                                  style: BorderStyle.solid,
+                                  width: 3.w),
+                            ),
+                            child: DropdownButton<String>(
+                              hint: Text("Select a type"),
+                              value: _currentType,
+                              items: getDropDownMenuItems(_categories.value),
+                              isExpanded: true,
+                              onChanged: changedDropDownItem,
+                            ),
+                          ),
+                        ),
+                        _buildCreateButton("Create"),
+                      ],
+                    ))), loading:(_)=> StylishSkeleton(subtitle: "Create your outfit",child: CircularProgressIndicator(),), error: (_)=> Center(child: Text("Error")));
+          },
+    ));
   }
 
   Widget _formInput(_name, _controller, {Widget suffix = null}) {
@@ -208,7 +233,7 @@ class _CreateClotheViewState extends State<CreateClotheView> {
                 color: Colors.white,
                 fontSize: 72.sp,
                 fontWeight: FontWeight.bold)),
-        onPressed: () {},
+        onPressed: ()=> createClothe(context),
       ),
     );
   }

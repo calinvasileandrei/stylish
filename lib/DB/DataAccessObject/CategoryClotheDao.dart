@@ -25,7 +25,6 @@ class CategoryClotheDao {
     CategoryDao categoryDao = new CategoryDao();
 
     int elementsNumber = await categoryDao.countElements();
-    log("elements: " + elementsNumber.toString());
     if (elementsNumber > 0) {
       return true;
     } else {

@@ -20,36 +20,22 @@ final categorysMapProvider =
 });
 
 class _HomeViewState extends State<HomeView> {
-  //Map<String, List<Clothe>> categorys;
 
   @override
   void initState() {
     super.initState();
     CategoryClotheDao categoryClotheDao = new CategoryClotheDao();
     categoryClotheDao.hasCategorysInitialized();
-    /*
-    Clothe exClothe = new Clothe("Tshirt", "10", "", "", "", "Tshirts");
-    List<Clothe> tshirtList = new List<Clothe>();
-    tshirtList.add(exClothe);
-    tshirtList.add(exClothe);
-    tshirtList.add(exClothe);
-
-    categorysFake = {
-      "tshirt": tshirtList,
-      "pants": tshirtList,
-      "shoes": tshirtList
-    };
-    */
   }
 
   @override
   Widget build(BuildContext context) {
     return Consumer(builder: (context, watch, child) {
-      final categorys = watch(categorysMapProvider);
-      return categorys.map(
+      final categories = watch(categorysMapProvider);
+      return categories.map(
         data: (_categorys) => StylishSkeleton(
           subtitle: "Choose your outfit",
-          child: ListCategoryBuilder(_categorys.value),
+          child: ListCategoryBuilder(categorys: _categorys.value),
         ),
         error: (_error) => StylishSkeleton(
             subtitle: "Choose your outfit",
@@ -59,7 +45,7 @@ class _HomeViewState extends State<HomeView> {
             )),
         loading: (_) => StylishSkeleton(
           subtitle: "Choose your outfit",
-          child: CircularProgressIndicator(),
+          child: Center(child: CircularProgressIndicator()),
         ),
       );
     });

@@ -26,7 +26,7 @@ class CategoryDao {
   }
 
   Future<Category> getByName(String categoryName) async {
-    final finder = Finder(filter: Filter.byKey(categoryName));
+    final finder = Finder(filter: Filter.equals("name",categoryName));
     final recordSnapshot =
         await _categoryStore.findFirst(await _db, finder: finder);
     return Category.fromMap(recordSnapshot.value);
@@ -42,6 +42,18 @@ class CategoryDao {
       final category = Category.fromMap(snapshot.value);
       category.id = snapshot.key;
       return category;
+    }).toList();
+  }
+
+  Future<List<String>> getAllCategoriesNames() async {
+    final finder = Finder();
+
+    final recordSnapshots =
+    await _categoryStore.find(await _db, finder: finder);
+
+    return recordSnapshots.map((snapshot) {
+      final category = Category.fromMap(snapshot.value);
+      return category.name;
     }).toList();
   }
 
