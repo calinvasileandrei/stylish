@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/all.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:stylish/Utils/global.dart';
 import 'package:stylish/View/CreateClotheView/CreateClotheView.dart';
@@ -9,10 +10,12 @@ void main() {
   runApp(ScreenUtilInit(
     designSize: Size(1125, 2436),
     allowFontScaling: false,
-    child: MaterialApp(
-      theme: stylishTheme,
-      title: 'Stylish',
-      home: new TabControllerApp(),
+    child: ProviderScope(
+      child: MaterialApp(
+        theme: stylishTheme,
+        title: 'Stylish',
+        home: new TabControllerApp(),
+      ),
     ),
   ));
 }

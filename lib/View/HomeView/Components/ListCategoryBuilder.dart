@@ -9,28 +9,35 @@ class ListCategoryBuilder extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return ListView.builder(
-        itemCount: categorys.length,
-        scrollDirection: Axis.vertical,
-        physics: BouncingScrollPhysics(),
-        itemBuilder: (context, index) {
-          String categoryNameKey = categorys.keys.elementAt(index);
-          return Container(
-              width: ScreenUtil().screenWidth,
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Padding(
-                    padding:
-                        EdgeInsets.only(left: 40.w, right: 40.w, top: 40.h),
-                    child: Text(
-                      categoryNameKey,
-                      style: Theme.of(context).textTheme.headline4,
-                    ),
-                  ),
-                  CategoryBuilder(categorys[categoryNameKey], categoryNameKey),
-                ],
-              ));
-        });
+    return categorys.isEmpty
+        ? Center(
+            child: Text(
+            "You seem new here, add your first clothe!",
+            style: Theme.of(context).textTheme.headline6,
+          ))
+        : ListView.builder(
+            itemCount: categorys.length,
+            scrollDirection: Axis.vertical,
+            physics: BouncingScrollPhysics(),
+            itemBuilder: (context, index) {
+              String categoryNameKey = categorys.keys.elementAt(index);
+              return Container(
+                  width: ScreenUtil().screenWidth,
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Padding(
+                        padding:
+                            EdgeInsets.only(left: 40.w, right: 40.w, top: 40.h),
+                        child: Text(
+                          categoryNameKey,
+                          style: Theme.of(context).textTheme.headline4,
+                        ),
+                      ),
+                      CategoryBuilder(
+                          categorys[categoryNameKey], categoryNameKey),
+                    ],
+                  ));
+            });
   }
 }

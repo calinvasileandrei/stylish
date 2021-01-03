@@ -56,7 +56,7 @@ class ClotheWidget extends StatelessWidget {
     return Container(
       child: ClipRRect(
           borderRadius: new BorderRadius.circular(9.0),
-          child: clothe.ImageFile == null || clothe.ImageFile == ""
+          child: clothe.imageFile == null || clothe.imageFile == ""
               ? LimitedBox(
                   child: Image(
                     image: AssetImage("assets/logo_white512.png"),
@@ -69,7 +69,7 @@ class ClotheWidget extends StatelessWidget {
                   borderRadius: new BorderRadius.circular(9.0),
                   child: LimitedBox(
                       child: Image.memory(
-                        base64Decode(clothe.ImageFile),
+                        base64Decode(clothe.imageFile),
                         fit: BoxFit.fill,
                       ),
                       maxHeight: 600.h,
@@ -94,14 +94,14 @@ class ClotheWidget extends StatelessWidget {
         Padding(
           padding: EdgeInsets.only(bottom: 12.h, top: 24.h),
           child: Text(
-            clothe.Name,
+            clothe.name,
             style: TextStyle(
                 fontSize: 40.sp,
                 fontFamily: "Montserrat-Bold",
                 color: (index % 2 == 0) ? Color(0xFF2a2d3f) : Colors.white),
           ),
         ),
-        Text(clothe.Type,
+        Text(clothe.category,
             style: TextStyle(
                 fontSize: 35.sp,
                 fontFamily: "Montserrat-Medium",
@@ -109,7 +109,7 @@ class ClotheWidget extends StatelessWidget {
         Row(
           children: <Widget>[
             Expanded(
-              child: Text(clothe.Price,
+              child: Text(clothe.price,
                   style: TextStyle(
                       fontSize: 60.sp,
                       fontFamily: "Montserrat-Bold",

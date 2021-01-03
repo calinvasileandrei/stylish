@@ -1,67 +1,67 @@
 import 'dart:io';
 
-class Clothe{
-  int _ID;
-  String _Name;
-  String _Price;
-  String _Link;
-  String _Image;
-  String _Type;
-  String _ImageFile;
+class Clothe {
+  int _id;
+  String _name;
+  String _price;
+  String _link;
+  String _image;
+  String _category;
+  String _imageFile;
 
+  Clothe(
+    this._name,
+    this._price,
+    this._link,
+    this._image,
+    this._imageFile,
+    this._category,
+  );
 
-  Clothe(this._Name,this._Price,this._Link,this._Image,this._ImageFile,this._Type,);
-
-  Clothe.map(dynamic obj) {
-    this._ID = obj['ID'];
-    this._Name = obj['Name'];
-    this._Price = obj['Price'];
-    this._Link = obj['Link'];
-    this._Image = obj['Image'];
-    this._ImageFile = obj['ImageFile'];
-    this._Type = obj['Type'];
-
-
+  void set id(int id) {
+    this._id = id;
   }
 
-  int get ID => this._ID;
-  String get Name => _Name;
-  String get Price => _Price;
-  String get Link => _Link;
-  String get Image => _Image;
-  String get ImageFile => _ImageFile;
-  String get Type => _Type;
+  Clothe.map(dynamic obj) {
+    this._id = obj['id'];
+    this._name = obj['name'];
+    this._price = obj['price'];
+    this._link = obj['link'];
+    this._image = obj['image'];
+    this._imageFile = obj['imageFile'];
+    this._category = obj['category'];
+  }
 
-
+  int get id => this._id;
+  String get name => _name;
+  String get price => _price;
+  String get link => _link;
+  String get image => _image;
+  String get imageFile => _imageFile;
+  String get category => _category;
 
   Map<String, dynamic> toMap() {
-    var map =new  Map<String, dynamic>();
-    if(ID != null){
-      map["ID"] = ID;
+    var map = new Map<String, dynamic>();
+    if (id != null) {
+      map["id"] = id;
     }
-    map["Name"] = Name;
-    map["Price"] = Price;
-    map["Link"] = Link;
-    map["Image"] = Image;
-    map["ImageFile"] = ImageFile;
-    map["Type"] = Type;
-
+    map["name"] = name;
+    map["price"] = price;
+    map["link"] = link;
+    map["image"] = image;
+    map["imageFile"] = imageFile;
+    map["category"] = category;
 
     return map;
   }
 
-  Clothe.fromMap(Map<String, dynamic> map){
-    this._ID = map['ID'];
-    this._Name = map['Name'];
-    this._Price = map['Price'];
-    this._Link = map['Link'];
-    this._Image = map['Image'];
-    this._ImageFile = map['ImageFile'];
-    this._Type = map['Type'];
-
+  Clothe.fromMap(Map<String, dynamic> map) {
+    this._id = map['id'];
+    this._name = map['name'];
+    this._price = map['price'];
+    this._link = map['link'];
+    this._image = map['image'];
+    this._imageFile = map['imageFile'];
+    this._category = map['category'];
   }
-
-
-
-
 }

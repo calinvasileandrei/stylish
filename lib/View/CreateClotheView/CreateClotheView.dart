@@ -30,10 +30,10 @@ class _CreateClotheViewState extends State<CreateClotheView> {
     super.initState();
     _dropDownMenuItems = getDropDownMenuItems();
 
-    _nameController = new TextEditingController(text: newClothe.Name);
-    _priceController = new TextEditingController(text: newClothe.Price);
-    _linkController = new TextEditingController(text: newClothe.Link);
-    _imageController = new TextEditingController(text: newClothe.Image);
+    _nameController = new TextEditingController(text: newClothe.name);
+    _priceController = new TextEditingController(text: newClothe.price);
+    _linkController = new TextEditingController(text: newClothe.link);
+    _imageController = new TextEditingController(text: newClothe.image);
     _currentType = _dropDownMenuItems[1].value;
   }
 
@@ -168,7 +168,7 @@ class _CreateClotheViewState extends State<CreateClotheView> {
               borderRadius: new BorderRadius.circular(9.0),
               child: _image == null || _image == ""
                   ? FadeInImage.assetNetwork(
-                      placeholder: 'asstets/logo_withe512.png',
+                      placeholder: 'assets/logo_white512.png',
                       image: _imageController.text,
                       width: ScreenUtil().setWidth(400),
                       fit: BoxFit.contain,
