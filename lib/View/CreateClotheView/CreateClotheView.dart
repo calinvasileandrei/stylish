@@ -1,9 +1,5 @@
 import 'dart:developer' as dv;
-import 'dart:math';
-
 import 'package:flutter/material.dart';
-import 'package:flutter_riverpod/all.dart';
-import 'package:stylish/DB/DataAccessObject/CategoryDao.dart';
 import 'package:stylish/DB/DataAccessObject/ClotheDao.dart';
 import 'package:stylish/Models/Clothe.dart';
 import 'package:stylish/Utils/StylishSkeleton.dart';
@@ -14,12 +10,6 @@ import 'dart:typed_data';
 import 'package:image_picker_modern/image_picker_modern.dart';
 
 
-
-final categoriesProvider = FutureProvider<List<String>>((ref) async{
-  CategoryDao categoryDao = new CategoryDao();
-  return await categoryDao.getAllCategoriesNames();
-
-});
 
 class CreateClotheView extends StatefulWidget {
   CreateClotheView({Key key}) : super(key: key);
@@ -38,6 +28,9 @@ class _CreateClotheViewState extends State<CreateClotheView> {
   List<DropdownMenuItem<String>> _dropDownMenuItems;
   String _currentType;
   Clothe newClothe = new Clothe("", "", "", "", "", "");
+
+  //TODO: implement logic for getting the data from db sembast
+  List<String> categories;
 
   @override
   void initState() {
@@ -109,63 +102,59 @@ class _CreateClotheViewState extends State<CreateClotheView> {
       data: Theme.of(context).copyWith(
           primaryColor: Color(
               0xFFfa7b58)), //TODO: change this with a proper way, this is a fast way to set the input the round color border but not the best
-      child:Consumer(
-          builder: (context, watch, child) {
-            final categoriesAsyncValues = watch(categoriesProvider);
-            return categoriesAsyncValues.map(data:(_categories)=> Container(
-                child: Padding(
-                    padding: EdgeInsets.only(left: 70.w, top: 0.h, right: 70.w),
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.center,
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: <Widget>[
-                        _buildProductImage(),
-                        _formInput("Link", _linkController,
-                            suffix: IconButton(
-                              icon: Icon(Icons.content_paste),
-                              onPressed: () => {},
-                            )),
-                        _formInput("Name", _nameController),
-                        _formInput("Price", _priceController),
-                        (_image == null || _image == '')
-                            ? _formInput("Image", _imageController,
-                            suffix: IconButton(
-                              icon: Icon(Icons.image),
-                              tooltip: 'Pick Image',
-                              onPressed: getImage,
-                            ))
-                            : _formInput("Image", _imageController,
-                            suffix: IconButton(
-                                icon: Icon(Icons.image),
-                                tooltip: 'Pick Image',
-                                onPressed: removeImage)),
-                        Container(
-                          width: ScreenUtil().screenWidth * 0.9,
-                          padding: new EdgeInsets.fromLTRB(24.w, 48.h, 24.w, 48.h),
-                          child: Container(
-                            padding: new EdgeInsets.only(left: 50.w, right: 50.w),
-                            decoration: BoxDecoration(
-                              color: Colors.white,
-                              borderRadius: BorderRadius.circular(32.0),
-                              border: Border.all(
-                                  color: Colors.grey,
-                                  style: BorderStyle.solid,
-                                  width: 3.w),
-                            ),
-                            child: DropdownButton<String>(
-                              hint: Text("Select a type"),
-                              value: _currentType,
-                              items: getDropDownMenuItems(_categories.value),
-                              isExpanded: true,
-                              onChanged: changedDropDownItem,
-                            ),
-                          ),
-                        ),
-                        _buildCreateButton("Create"),
-                      ],
-                    ))), loading:(_)=> StylishSkeleton(subtitle: "Create your outfit",child: CircularProgressIndicator(),), error: (_)=> Center(child: Text("Error")));
-          },
-    ));
+      child:Container(
+          child: Padding(
+              padding: EdgeInsets.only(left: 70.w, top: 0.h, right: 70.w),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.center,
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: <Widget>[
+                  _buildProductImage(),
+                  _formInput("Link", _linkController,
+                      suffix: IconButton(
+                        icon: Icon(Icons.content_paste),
+                        onPressed: () => {},
+                      )),
+                  _formInput("Name", _nameController),
+                  _formInput("Price", _priceController),
+                  (_image == null || _image == '')
+                      ? _formInput("Image", _imageController,
+                      suffix: IconButton(
+                        icon: Icon(Icons.image),
+                        tooltip: 'Pick Image',
+                        onPressed: getImage,
+                      ))
+                      : _formInput("Image", _imageController,
+                      suffix: IconButton(
+                          icon: Icon(Icons.image),
+                          tooltip: 'Pick Image',
+                          onPressed: removeImage)),
+                  Container(
+                    width: ScreenUtil().screenWidth * 0.9,
+                    padding: new EdgeInsets.fromLTRB(24.w, 48.h, 24.w, 48.h),
+                    child: Container(
+                      padding: new EdgeInsets.only(left: 50.w, right: 50.w),
+                      decoration: BoxDecoration(
+                        color: Colors.white,
+                        borderRadius: BorderRadius.circular(32.0),
+                        border: Border.all(
+                            color: Colors.grey,
+                            style: BorderStyle.solid,
+                            width: 3.w),
+                      ),
+                      child: DropdownButton<String>(
+                        hint: Text("Select a type"),
+                        value: _currentType,
+                        items: getDropDownMenuItems(categories),
+                        isExpanded: true,
+                        onChanged: changedDropDownItem,
+                      ),
+                    ),
+                  ),
+                  _buildCreateButton("Create"),
+                ],
+              )))
+    );
   }
 
   Widget _formInput(_name, _controller, {Widget suffix = null}) {
