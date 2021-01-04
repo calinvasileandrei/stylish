@@ -93,7 +93,6 @@ class _TabControllerAppState extends State<TabControllerApp> {
   }
 
   Widget _buildFloatingActionButton(BuildContext context) {
-    //ListViewClothes l = new ListViewClothes();
     return Container(
       width: 180.w,
       height: 180.h,
