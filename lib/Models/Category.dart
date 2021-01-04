@@ -45,4 +45,8 @@ class Category {
     this._clothes = new List<int>.from(map['clothes']);
 
   }
+
+  @override
+  String toString() => 'Category(name: $_name, clothes: $_clothes)';
+
 }

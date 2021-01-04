@@ -64,4 +64,8 @@ class Clothe {
     this._imageFile = map['imageFile'];
     this._category = map['category'];
   }
+
+  @override
+  String toString() => 'Clothe(id: $_id, name: $_name, price: $_price, link: $_link, category: $_category)';
+
 }

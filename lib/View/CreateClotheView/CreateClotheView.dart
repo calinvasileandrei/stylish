@@ -1,3 +1,4 @@
+import 'dart:async';
 import 'dart:developer' as dv;
 import 'package:flutter/material.dart';
 import 'package:stylish/DB/DataAccessObject/ClotheDao.dart';
@@ -8,6 +9,8 @@ import 'dart:convert';
 import 'dart:io';
 import 'dart:typed_data';
 import 'package:image_picker_modern/image_picker_modern.dart';
+import 'package:stylish/View/CreateClotheView/bloc/CreateClotheBloc.dart';
+import 'package:stylish/View/HomeView/bloc/HomeBloc.dart';
 
 
 
@@ -24,16 +27,13 @@ class _CreateClotheViewState extends State<CreateClotheView> {
   TextEditingController _linkController;
   TextEditingController _imageController;
   String _image;
-  List _categoriesTypes = ["Hat", "T-shirt/Vests", "Trousers", "Shoes", "Accessories"];
-  List<DropdownMenuItem<String>> _dropDownMenuItems;
   String _currentType;
   Clothe newClothe = new Clothe("", "", "", "", "", "");
-
-  //TODO: implement logic for getting the data from db sembast
-  List<String> categories;
+  CreateClotheBloc createClotheBloc = new CreateClotheBloc();
 
   @override
   void initState() {
+    createClotheBloc.eventSink.add(CreateClotheEvent.Fetch);
     super.initState();
     //_dropDownMenuItems = getDropDownMenuItems();
     _nameController = new TextEditingController(text: newClothe.name);
@@ -75,7 +75,10 @@ class _CreateClotheViewState extends State<CreateClotheView> {
   void createClothe(BuildContext context) async{
     ClotheDao clotheDao = new ClotheDao();
     Clothe clothe = new Clothe(_nameController.text, _priceController.text, _linkController.text, _imageController.text, _image, _currentType);
+    dv.log(clothe.toString());
     await clotheDao.insert(clothe);
+    HomeBloc homeBloc = new HomeBloc();
+    await homeBloc.eventSink.add(HomeEvent.Fetch);
     Navigator.pop(context);
   }
 
@@ -142,12 +145,23 @@ class _CreateClotheViewState extends State<CreateClotheView> {
                             style: BorderStyle.solid,
                             width: 3.w),
                       ),
-                      child: DropdownButton<String>(
-                        hint: Text("Select a type"),
-                        value: _currentType,
-                        items: getDropDownMenuItems(categories),
-                        isExpanded: true,
-                        onChanged: changedDropDownItem,
+                      child: StreamBuilder<List<String>>(
+                        stream: createClotheBloc.mainStream,
+                        builder: (context, snapshot) {
+                          if(snapshot.hasData && snapshot.data.length > 0){
+                          return DropdownButton<String>(
+                            hint: Text("Select a type"),
+                            value: _currentType,
+                            items: getDropDownMenuItems(snapshot.data),
+                            isExpanded: true,
+                            onChanged: changedDropDownItem,
+                          );
+                          }else{
+                            Timer.periodic(Duration(seconds: 2),(Timer t)=> createClotheBloc.eventSink.add(CreateClotheEvent.Fetch) );
+
+                            return Center(child: CircularProgressIndicator());
+                          }
+                        }
                       ),
                     ),
                   ),

@@ -1,3 +1,5 @@
+import 'dart:developer';
+
 import 'package:sembast/sembast.dart';
 import 'package:stylish/DB/AppDatabase.dart';
 import 'package:stylish/Models/Category.dart';
@@ -25,11 +27,27 @@ class CategoryDao {
     await _categoryStore.delete(await _db, finder: finder);
   }
 
+  Future<bool> deleteAllCategory() async {
+    List<Category> allCategories = await getAllSortedByName();
+    try{
+      allCategories.forEach((category) async {
+        await delete(category);
+      });
+      return true;
+    }catch (e){
+      return false;
+    }
+  }
+
   Future<Category> getByName(String categoryName) async {
     final finder = Finder(filter: Filter.equals("name",categoryName));
     final recordSnapshot =
         await _categoryStore.findFirst(await _db, finder: finder);
-    return Category.fromMap(recordSnapshot.value);
+    if(recordSnapshot != null && recordSnapshot.value != null) {
+      var category = Category.fromMap(recordSnapshot.value);
+      category.id = recordSnapshot.key;
+      return category;
+    }
   }
 
   Future<List<Category>> getAllSortedByName() async {

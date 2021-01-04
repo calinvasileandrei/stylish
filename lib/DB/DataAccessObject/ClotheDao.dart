@@ -1,3 +1,5 @@
+import 'dart:developer';
+
 import 'package:sembast/sembast.dart';
 import 'package:stylish/DB/AppDatabase.dart';
 import 'package:stylish/DB/DataAccessObject/CategoryDao.dart';
@@ -14,17 +16,25 @@ class ClotheDao {
 
   Future insert(Clothe clothe) async {
     //add the new clothe
-    await _clotheStore.add(await _db, clothe.toMap());
-
+    int id_clothe;
+    try {
+      id_clothe = await _clotheStore.add(await _db, clothe.toMap());
+    }catch (e){
+      log("Error adding data to db");
+    }
     //get the category for that clothe
     CategoryDao categoryDao = new CategoryDao();
     Category category = await categoryDao.getByName(clothe.category);
-
     //add the new clothe to the category list of ids
-    category.addNewClothe(clothe.id);
+    if(id_clothe != null) {
+      category.addNewClothe(id_clothe);
+      //update the category on db with the new data
+      await categoryDao.update(category);
+    }else{
+      log("categoridao: ${category}");
+    }
 
-    //update the category on db with the new data
-    categoryDao.update(category);
+
   }
 
   Future update(Clothe clothe) async {
@@ -36,13 +46,19 @@ class ClotheDao {
     final finder = Finder(filter: Filter.byKey(clotheId));
     final recordSnapshot =
         await _clotheStore.findFirst(await _db, finder: finder);
-    return Clothe.fromMap(recordSnapshot.value);
+
+    Clothe clothe= Clothe.fromMap(recordSnapshot.value);
+    clothe.id = clotheId;
+
+    return clothe;
   }
 
   Future<List<Clothe>> getClothes(List<int> clothesIds) async {
-    List<Clothe> clothes = new List();
+    List<Clothe> clothes = new List<Clothe>();
+
     clothesIds.forEach((id) async {
-      clothes.add(await getClothe(id));
+      Clothe clothe = await getClothe(id);
+      clothes.add(clothe);
     });
 
     return clothes;
@@ -61,6 +77,18 @@ class ClotheDao {
 
     //update the category on db
     categoryDao.update(category);
+  }
+
+  Future<bool> deleteAllClothes() async {
+    List<Clothe> allClothes = await getAllSortedByName();
+    try{
+      allClothes.forEach((clothe) async {
+        await delete(clothe);
+      });
+      return true;
+    }catch (e){
+      return false;
+    }
   }
 
   Future<List<Clothe>> getAllSortedByName() async {

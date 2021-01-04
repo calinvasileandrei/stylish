@@ -1,14 +1,12 @@
 import 'dart:async';
-
 import 'package:stylish/DB/DataAccessObject/CategoryClotheDao.dart';
 import 'package:stylish/Models/CategoryClothes.dart';
 
-enum HomeEvent { Fetch, Init }
+enum HomeEvent { Fetch, Init, DeleteAll }
 
 class HomeBloc {
   final _stateStreamController = StreamController<List<CategoryClothes>>();
-  StreamSink<List<CategoryClothes>> get _homeSink =>
-      _stateStreamController.sink;
+  StreamSink<List<CategoryClothes>> get _homeSink => _stateStreamController.sink;
   Stream<List<CategoryClothes>> get homeStream => _stateStreamController.stream;
 
   final _eventStreamController = StreamController<HomeEvent>();
@@ -18,18 +16,30 @@ class HomeBloc {
   HomeBloc() {
     _eventStream.listen((event) async {
       switch (event) {
+        case HomeEvent.Init:
+          {
+            CategoryClotheDao repository = new CategoryClotheDao();
+            await repository.hasCategorysInitialized();
+
+            final categoryClothesData=await repository.getHomeViewCategory();
+            _homeSink.add(categoryClothesData);
+          } break;
+
         case HomeEvent.Fetch:
           {
             CategoryClotheDao repository = new CategoryClotheDao();
             _homeSink.add(await repository.getHomeViewCategory());
           }
           break;
-        case HomeEvent.Init:
+
+        case HomeEvent.DeleteAll:
           {
             CategoryClotheDao repository = new CategoryClotheDao();
-            await repository.hasCategorysInitialized();
+            await repository.deleteAll();
             _homeSink.add(await repository.getHomeViewCategory());
           }
+          break;
+
       }
     });
   }

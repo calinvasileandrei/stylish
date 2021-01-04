@@ -29,11 +29,20 @@ class CategoryClotheDao {
     int elementsNumber = await categoryDao.countElements();
     if (elementsNumber > 0) {
       return true;
-      log("no category init");
     } else {
       await categoryDao.initCategory();
-      log("category init");
       return false;
     }
   }
+
+  Future deleteAll() async{
+    final categoryDao = new CategoryDao();
+    final clotheDao = new ClotheDao();
+    await categoryDao.deleteAllCategory();
+    await clotheDao.deleteAllClothes();
+  }
+
+
+
+
 }

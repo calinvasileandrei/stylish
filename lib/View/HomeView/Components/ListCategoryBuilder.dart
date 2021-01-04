@@ -25,8 +25,7 @@ class _ListCategoryBuilderState extends State<ListCategoryBuilder> {
     // TODO: implement initState
     super.initState();
     placeholderList.add(placeholderClothe);
-    log("is empty: " + widget.categoryClothes.isEmpty.toString());
-    log("categorys" + widget.categoryClothes.toString());
+    log(widget.categoryClothes.toString());
   }
 
   @override
