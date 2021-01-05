@@ -1,5 +1,4 @@
 import 'dart:async';
-import 'dart:developer' as dv;
 import 'package:flutter/material.dart';
 import 'package:stylish/DB/DataAccessObject/ClotheDao.dart';
 import 'package:stylish/Models/Clothe.dart';
@@ -10,10 +9,10 @@ import 'dart:io';
 import 'dart:typed_data';
 import 'package:image_picker_modern/image_picker_modern.dart';
 import 'package:stylish/View/CreateClotheView/bloc/CreateClotheBloc.dart';
-import 'package:stylish/View/HomeView/bloc/HomeBloc.dart';
+import 'package:stylish/main.dart';
 
 
-
+//TODO: Destructure this widget in sub_widgets
 class CreateClotheView extends StatefulWidget {
   CreateClotheView({Key key}) : super(key: key);
 
@@ -35,12 +34,10 @@ class _CreateClotheViewState extends State<CreateClotheView> {
   void initState() {
     createClotheBloc.eventSink.add(CreateClotheEvent.Fetch);
     super.initState();
-    //_dropDownMenuItems = getDropDownMenuItems();
     _nameController = new TextEditingController(text: newClothe.name);
     _priceController = new TextEditingController(text: newClothe.price);
     _linkController = new TextEditingController(text: newClothe.link);
     _imageController = new TextEditingController(text: newClothe.image);
-    //_currentType = _dropDownMenuItems[0].value;
   }
 
 
@@ -75,11 +72,8 @@ class _CreateClotheViewState extends State<CreateClotheView> {
   void createClothe(BuildContext context) async{
     ClotheDao clotheDao = new ClotheDao();
     Clothe clothe = new Clothe(_nameController.text, _priceController.text, _linkController.text, _imageController.text, _image, _currentType);
-    dv.log(clothe.toString());
     await clotheDao.insert(clothe);
-    HomeBloc homeBloc = new HomeBloc();
-    await homeBloc.eventSink.add(HomeEvent.Fetch);
-    Navigator.pop(context);
+    Navigator.pushReplacement(context,MaterialPageRoute(builder: (context) => TabControllerApp()));
   }
 
   @override

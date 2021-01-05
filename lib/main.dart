@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:stylish/Utils/global.dart';
 import 'package:stylish/View/CreateClotheView/CreateClotheView.dart';
+import 'package:stylish/View/SettingsView/SettingsView.dart';
 
 import 'View/HomeView/HomeView.dart';
 
@@ -12,6 +13,7 @@ void main() {
     child:  MaterialApp(
         theme: stylishTheme,
         title: 'Stylish',
+        debugShowCheckedModeBanner: false,
         home: new TabControllerApp(),
       ),
   ));
@@ -37,9 +39,7 @@ class _TabControllerAppState extends State<TabControllerApp> {
             physics: const NeverScrollableScrollPhysics(),
             children: [
               new HomeView(),
-              new Container(
-                color: Colors.blue,
-              ),
+              new SettingsView()
             ],
           ),
           backgroundColor: Theme.of(context).primaryColor,

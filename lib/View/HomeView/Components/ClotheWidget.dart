@@ -61,9 +61,9 @@ class ClotheWidget extends StatelessWidget {
                   child: Image(
                     image: AssetImage("assets/logo_white512.png"),
                     width: 350.w,
-                    fit: BoxFit.fill,
+                    fit: BoxFit.fitWidth,
                   ),
-                  maxHeight: 600.h,
+                  maxHeight: 400.h,
                   maxWidth: 500.w)
               : ClipRRect(
                   borderRadius: new BorderRadius.circular(9.0),
@@ -72,7 +72,7 @@ class ClotheWidget extends StatelessWidget {
                         base64Decode(clothe.imageFile),
                         fit: BoxFit.fill,
                       ),
-                      maxHeight: 600.h,
+                      maxHeight: 400.h,
                       maxWidth: 500.w),
                 )),
       decoration: new BoxDecoration(

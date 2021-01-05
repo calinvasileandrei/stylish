@@ -19,7 +19,8 @@ class _HomeViewState extends State<HomeView> {
 
   @override
   void initState() {
-    homeBloc.eventSink.add(HomeEvent.DeleteAll);
+    //TODO: remove below line only for debug
+    //homeBloc.eventSink.add(HomeEvent.DeleteAll);
     homeBloc.eventSink.add(HomeEvent.Init);
     super.initState();
   }
