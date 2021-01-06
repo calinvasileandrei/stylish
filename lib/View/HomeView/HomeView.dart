@@ -25,15 +25,10 @@ class _HomeViewState extends State<HomeView> {
     super.initState();
   }
 
-  //TODO: remove only for debug
-  void clothedata() async{
-    ClotheDao clotheDao = new ClotheDao();
-    CategoryDao categoryDao = new CategoryDao();
-    final clothe =await clotheDao.getAllSortedByName();
-    log("all clothe: $clothe");
-
-    final category = await categoryDao.getAllSortedByName();
-    log("all category: $category");
+  @override
+  void dispose() {
+    homeBloc.dispose();
+    super.dispose();
   }
 
   @override

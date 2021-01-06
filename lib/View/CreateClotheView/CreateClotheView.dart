@@ -10,8 +10,11 @@ import 'dart:convert';
 import 'dart:io';
 import 'dart:typed_data';
 import 'package:image_picker_modern/image_picker_modern.dart';
+import 'package:stylish/View/CreateClotheView/Components/ProductImage.dart';
+import 'package:stylish/View/CreateClotheView/Components/StylishFormInput.dart';
 import 'package:stylish/View/CreateClotheView/bloc/CreateClotheBloc.dart';
 import 'package:stylish/main.dart';
+import 'Components/DropDownCategories.dart';
 
 
 //TODO: Destructure this widget in sub_widgets
@@ -34,7 +37,6 @@ class _CreateClotheViewState extends State<CreateClotheView> {
 
   @override
   void initState() {
-    createClotheBloc.eventSink.add(CreateClotheEvent.Fetch);
     super.initState();
     _nameController = new TextEditingController(text: newClothe.name);
     _priceController = new TextEditingController(text: newClothe.price);
@@ -43,30 +45,24 @@ class _CreateClotheViewState extends State<CreateClotheView> {
   }
 
 
-  List<DropdownMenuItem<String>> getDropDownMenuItems(categories) {
-    List<DropdownMenuItem<String>> items = new List();
-    for (String type in categories) {
-      items.add(new DropdownMenuItem(value: type, child: new Text(type)));
-    }
-    return items;
-  }
-
-  void changedDropDownItem(String selectedType) {
-    setState(() {
-      _currentType = selectedType;
-    });
-  }
-
   void getImage() async {
-    File image = await ImagePicker.pickImage(source: ImageSource.gallery);
-    Uint8List bytes = image.readAsBytesSync();
-    setState(() {
-      _image = base64Encode(bytes);
-    });
+    try {
+      File image = await ImagePicker.pickImage(source: ImageSource.gallery);
+      Uint8List bytes = image.readAsBytesSync();
+      setState(() {
+        _imageController.text = "Local Image";
+        _image = base64Encode(bytes);
+      });
+    }catch(e){
+      setState(() {
+        _imageController.text="Error getting the image!";
+      });
+    }
   }
 
   void removeImage() async {
     setState(() {
+      _imageController.text = "";
       _image = null;
     });
   }
@@ -97,6 +93,7 @@ class _CreateClotheViewState extends State<CreateClotheView> {
         _nameController.text = response["data"]["title"];
         _priceController.text = response["data"]["price"];
         _imageController.text = response["data"]["image"];
+        _image = null;
       });
     }else{
       setState(() {
@@ -135,106 +132,31 @@ class _CreateClotheViewState extends State<CreateClotheView> {
                 crossAxisAlignment: CrossAxisAlignment.center,
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: <Widget>[
-                  _buildProductImage(),
-                  _formInput("Link", _linkController,
+                  ProductImage(image: _image,imageText: _imageController.text,),
+                  StylishFormInput(name:"Link",controller: _linkController,
                       suffix: IconButton(
                         icon: Icon(Icons.content_paste),
                         onPressed: () => {scrapeData()},
                       )),
-                  _formInput("Name", _nameController),
-                  _formInput("Price", _priceController),
+                  StylishFormInput(name:"Name",controller: _nameController),
+                  StylishFormInput(name:"Price",controller:_priceController),
                   (_image == null || _image == '')
-                      ? _formInput("Image", _imageController,
+                      ? StylishFormInput(name:"Image", controller: _imageController,
                       suffix: IconButton(
                         icon: Icon(Icons.image),
                         tooltip: 'Pick Image',
                         onPressed: getImage,
                       ))
-                      : _formInput("Image", _imageController,
+                      : StylishFormInput(name:"Image", controller: _imageController,
                       suffix: IconButton(
-                          icon: Icon(Icons.image),
-                          tooltip: 'Pick Image',
-                          onPressed: removeImage)),
-                  Container(
-                    width: ScreenUtil().screenWidth * 0.9,
-                    padding: new EdgeInsets.fromLTRB(24.w, 48.h, 24.w, 48.h),
-                    child: Container(
-                      padding: new EdgeInsets.only(left: 50.w, right: 50.w),
-                      decoration: BoxDecoration(
-                        color: Colors.white,
-                        borderRadius: BorderRadius.circular(32.0),
-                        border: Border.all(
-                            color: Colors.grey,
-                            style: BorderStyle.solid,
-                            width: 3.w),
-                      ),
-                      child: StreamBuilder<List<String>>(
-                        stream: createClotheBloc.mainStream,
-                        builder: (context, snapshot) {
-                          if(snapshot.hasData && snapshot.data.length > 0){
-                          return DropdownButton<String>(
-                            hint: Text("Select a type"),
-                            value: _currentType,
-                            items: getDropDownMenuItems(snapshot.data),
-                            isExpanded: true,
-                            onChanged: changedDropDownItem,
-                          );
-                          }else{
-                            Timer.periodic(Duration(seconds: 2),(Timer t)=> createClotheBloc.eventSink.add(CreateClotheEvent.Fetch) );
-
-                            return Center(child: CircularProgressIndicator());
-                          }
-                        }
-                      ),
-                    ),
-                  ),
+                          icon: Icon(Icons.delete),
+                          tooltip: 'Remove Image',
+                          onPressed: removeImage), disabled: true,),
+                  DropDownCategories(callback:  (val) => setState(() => _currentType = val),currentType: _currentType,),
                   _buildCreateButton("Create"),
                 ],
               )))
     );
-  }
-
-  Widget _formInput(_name, _controller, {Widget suffix = null}) {
-    return Container(
-        width: ScreenUtil().screenWidth * 0.9,
-        padding: new EdgeInsets.fromLTRB(24.w, 48.h, 24.w, 48.h),
-        child: TextField(
-          controller: _controller,
-          decoration: InputDecoration(
-              labelText: _name,
-              filled: true,
-              fillColor: Colors.white,
-              contentPadding: EdgeInsets.fromLTRB(50.w, 37.h, 50.w, 37.h),
-              border:
-                  OutlineInputBorder(borderRadius: BorderRadius.circular(32.0)),
-              suffixIcon: suffix),
-        ));
-  }
-
-  Widget _buildProductImage() {
-    return SizedBox(
-        width: ScreenUtil().setWidth(400),
-        child: Container(
-            child: ClipRRect(
-              borderRadius: new BorderRadius.circular(9.0),
-              child: _image == null || _image == ""
-                  ? FadeInImage.assetNetwork(
-                      placeholder: 'assets/logo_white512.png',
-                      image: _imageController.text,
-                      width: ScreenUtil().setWidth(400),
-                      fit: BoxFit.contain,
-                    )
-                  : new Image.memory(base64Decode(_image)),
-            ),
-            decoration: new BoxDecoration(
-              boxShadow: [
-                BoxShadow(
-                  color: Colors.black12,
-                  blurRadius: 10.0,
-                  offset: Offset(4.0, 10.0),
-                ),
-              ],
-            )));
   }
 
   Widget _buildCreateButton(floatingButtonText) {
