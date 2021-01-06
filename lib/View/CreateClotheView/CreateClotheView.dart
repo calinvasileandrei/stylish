@@ -12,12 +12,12 @@ import 'dart:typed_data';
 import 'package:image_picker_modern/image_picker_modern.dart';
 import 'package:stylish/View/CreateClotheView/Components/ProductImage.dart';
 import 'package:stylish/View/CreateClotheView/Components/StylishFormInput.dart';
+import 'package:stylish/View/CreateClotheView/Components/StylishLargeButton.dart';
 import 'package:stylish/View/CreateClotheView/bloc/CreateClotheBloc.dart';
 import 'package:stylish/main.dart';
 import 'Components/DropDownCategories.dart';
 
 
-//TODO: Destructure this widget in sub_widgets
 class CreateClotheView extends StatefulWidget {
   CreateClotheView({Key key}) : super(key: key);
 
@@ -43,7 +43,6 @@ class _CreateClotheViewState extends State<CreateClotheView> {
     _linkController = new TextEditingController(text: newClothe.link);
     _imageController = new TextEditingController(text: newClothe.image);
   }
-
 
   void getImage() async {
     try {
@@ -71,7 +70,11 @@ class _CreateClotheViewState extends State<CreateClotheView> {
     ClotheDao clotheDao = new ClotheDao();
     Clothe clothe = new Clothe(_nameController.text, _priceController.text, _linkController.text, _imageController.text, _image, _currentType);
     await clotheDao.insert(clothe);
-    Navigator.pushReplacement(context,MaterialPageRoute(builder: (context) => TabControllerApp()));
+    Navigator.pushAndRemoveUntil(
+      context,
+      MaterialPageRoute(builder: (context) => TabControllerApp()),
+          (Route<dynamic> route) => false,
+    );
   }
 
   void scrapeData() async{
@@ -153,36 +156,11 @@ class _CreateClotheViewState extends State<CreateClotheView> {
                           tooltip: 'Remove Image',
                           onPressed: removeImage), disabled: true,),
                   DropDownCategories(callback:  (val) => setState(() => _currentType = val),currentType: _currentType,),
-                  _buildCreateButton("Create"),
+                  StylishLargeButton(buttonText: "Create",callback: ()=>createClothe(context))
+
                 ],
               )))
     );
   }
 
-  Widget _buildCreateButton(floatingButtonText) {
-    return Container(
-      width: ScreenUtil().screenWidth * 0.95,
-      height: 140.h,
-      margin: EdgeInsets.only(top: 100.h),
-      decoration: BoxDecoration(
-          color: Color(0xFFfa7b58),
-          shape: BoxShape.rectangle,
-          borderRadius: BorderRadius.all(Radius.circular(30.0)),
-          boxShadow: [
-            BoxShadow(
-                color: Color(0xFFf78a6c).withOpacity(.6),
-                offset: Offset(0.0, 10.0),
-                blurRadius: 10.0)
-          ]),
-      child: RawMaterialButton(
-        shape: RoundedRectangleBorder(),
-        child: Text(floatingButtonText,
-            style: TextStyle(
-                color: Colors.white,
-                fontSize: 72.sp,
-                fontWeight: FontWeight.bold)),
-        onPressed: ()=> createClothe(context),
-      ),
-    );
-  }
 }

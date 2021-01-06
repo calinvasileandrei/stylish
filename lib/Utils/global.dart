@@ -4,6 +4,7 @@ ThemeData stylishTheme = ThemeData(
   primaryColor: Colors.white,
   primaryColorDark: Colors.black,
   bottomAppBarColor: Colors.white,
+  textSelectionColor: Colors.black12,
   accentColor: Color(0xffFA7B58),
   brightness: Brightness.light,
   backgroundColor: Color(0xffF2F2F2),
