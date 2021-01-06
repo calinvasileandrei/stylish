@@ -1,7 +1,9 @@
 import 'dart:async';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:stylish/DB/DataAccessObject/ClotheDao.dart';
 import 'package:stylish/Models/Clothe.dart';
+import 'package:stylish/ScraperAPI/ScraperAPI.dart';
 import 'package:stylish/Utils/StylishSkeleton.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'dart:convert';
@@ -76,6 +78,33 @@ class _CreateClotheViewState extends State<CreateClotheView> {
     Navigator.pushReplacement(context,MaterialPageRoute(builder: (context) => TabControllerApp()));
   }
 
+  void scrapeData() async{
+    //Paste data from clipboard
+    ClipboardData data = await Clipboard.getData('text/plain');
+    setState(() {
+      _linkController.text = "";
+      _linkController.text = data.text;
+    });
+    String linkToScrape = _linkController.text;
+
+    //create the scrapeApi
+    final scrapeApi = new ScraperAPI();
+    var response = await scrapeApi.scrapeWebsite(linkToScrape);
+
+    //elaborate the result
+    if(response["status"] == "Ok"){
+      setState(() {
+        _nameController.text = response["data"]["title"];
+        _priceController.text = response["data"]["price"];
+        _imageController.text = response["data"]["image"];
+      });
+    }else{
+      setState(() {
+        _linkController.text = response["msg"];
+      });
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -110,7 +139,7 @@ class _CreateClotheViewState extends State<CreateClotheView> {
                   _formInput("Link", _linkController,
                       suffix: IconButton(
                         icon: Icon(Icons.content_paste),
-                        onPressed: () => {},
+                        onPressed: () => {scrapeData()},
                       )),
                   _formInput("Name", _nameController),
                   _formInput("Price", _priceController),

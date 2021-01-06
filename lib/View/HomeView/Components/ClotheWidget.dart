@@ -56,14 +56,14 @@ class ClotheWidget extends StatelessWidget {
     return Container(
       child: ClipRRect(
           borderRadius: new BorderRadius.circular(9.0),
-          child: clothe.imageFile == null || clothe.imageFile == ""
+          child: clothe.imageFile == null || clothe.imageFile == "" || clothe.image == ""
               ? LimitedBox(
-                  child: Image(
-                    image: AssetImage("assets/logo_white512.png"),
-                    width: 350.w,
-                    fit: BoxFit.fitWidth,
+                  child: FadeInImage.assetNetwork(
+                    placeholder: 'assets/logo_white512.png',
+                    image: clothe.image,
+                    fit: BoxFit.contain,
                   ),
-                  maxHeight: 400.h,
+                  maxHeight: 350.h,
                   maxWidth: 500.w)
               : ClipRRect(
                   borderRadius: new BorderRadius.circular(9.0),
@@ -93,13 +93,24 @@ class ClotheWidget extends StatelessWidget {
       children: <Widget>[
         Padding(
           padding: EdgeInsets.only(bottom: 12.h, top: 24.h),
-          child: Text(
+          child: clothe.name.length <= 34 ? Text(
             clothe.name,
             style: TextStyle(
                 fontSize: 40.sp,
                 fontFamily: "Montserrat-Bold",
                 color: (index % 2 == 0) ? Color(0xFF2a2d3f) : Colors.white),
-          ),
+          ):
+              new SingleChildScrollView(
+                scrollDirection: Axis.horizontal,
+                child: Text(
+                  clothe.name,
+                  style: TextStyle(
+                      fontSize: 40.sp,
+                      fontFamily: "Montserrat-Bold",
+                      color: (index % 2 == 0) ? Color(0xFF2a2d3f) : Colors.white),
+                ),
+              )
+          ,
         ),
         Text(clothe.category,
             style: TextStyle(
