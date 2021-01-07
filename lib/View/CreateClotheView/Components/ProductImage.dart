@@ -4,8 +4,9 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 
 class ProductImage extends StatelessWidget {
   final image;
-  final imageText;
-  ProductImage({Key key, this.image,this.imageText}): super(key: key);
+  final isLocalImage;
+
+  ProductImage({Key key, this.image, this.isLocalImage}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -13,16 +14,33 @@ class ProductImage extends StatelessWidget {
         width: 400.w,
         child: Container(
             child: ClipRRect(
-              borderRadius: new BorderRadius.circular(9.0),
-              child: image == null || image == ""
-                  ? FadeInImage.assetNetwork(
-                placeholder: 'assets/logo_white512.png',
-                image: imageText,
-                width: ScreenUtil().setWidth(400),
-                fit: BoxFit.contain,
-              )
-                  : new Image.memory(base64Decode(image)),
-            ),
+                borderRadius: new BorderRadius.circular(9.0),
+                child: (image == "" || image == null)
+                    ? ClipRRect(
+                        borderRadius: new BorderRadius.circular(9.0),
+                        child: LimitedBox(
+                            child: Image.asset(
+                              "assets/logo_white512.png",
+                              fit: BoxFit.fill,
+                            ),
+                            maxHeight: 550.h),
+                      )
+                    : isLocalImage
+                        ? ClipRRect(
+                            borderRadius: new BorderRadius.circular(9.0),
+                            child: LimitedBox(
+                                child: Image.memory(
+                                  base64Decode(image),
+                                  fit: BoxFit.fill,
+                                ),
+                                maxHeight: 550.h),
+                          )
+                        : FadeInImage.assetNetwork(
+                            placeholder: 'assets/logo_white512.png',
+                            image: image,
+                            height: 550.w,
+                            fit: BoxFit.contain,
+                          )),
             decoration: new BoxDecoration(
               boxShadow: [
                 BoxShadow(

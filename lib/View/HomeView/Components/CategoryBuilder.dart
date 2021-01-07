@@ -18,7 +18,7 @@ class CategoryBuilder extends StatelessWidget {
           scrollDirection: Axis.horizontal,
           physics: BouncingScrollPhysics(),
           itemBuilder: (context, index) {
-            return new ClotheWidget(index, items[index]);
+            return  new ClotheWidget(index, items[index]);
           }),
     );
   }

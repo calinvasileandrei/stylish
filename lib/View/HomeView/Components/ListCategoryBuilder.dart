@@ -16,7 +16,7 @@ class ListCategoryBuilder extends StatefulWidget {
 }
 
 class _ListCategoryBuilderState extends State<ListCategoryBuilder> {
-  final Clothe placeholderClothe = new Clothe("No Items There", "", "", "", "",
+  final Clothe placeholderClothe = new Clothe("No Items There", "", "",  "",false,
       "Start adding some clothes to this category!");
   final List<Clothe> placeholderList = new List<Clothe>();
 
@@ -30,7 +30,7 @@ class _ListCategoryBuilderState extends State<ListCategoryBuilder> {
 
   @override
   Widget build(BuildContext context) {
-    return widget.categoryClothes.isEmpty
+    return widget.categoryClothes == null || widget.categoryClothes.isEmpty
         ? Center(
             child: Text(
             "You seem new here, add your first clothe!",

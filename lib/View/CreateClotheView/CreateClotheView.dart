@@ -1,4 +1,3 @@
-import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:stylish/DB/DataAccessObject/ClotheDao.dart';
@@ -31,8 +30,9 @@ class _CreateClotheViewState extends State<CreateClotheView> {
   TextEditingController _linkController;
   TextEditingController _imageController;
   String _image;
+  bool _isLocalImage=false;
   String _currentType;
-  Clothe newClothe = new Clothe("", "", "", "", "", "");
+  Clothe newClothe = new Clothe("", "", "", "", false,"");
   CreateClotheBloc createClotheBloc = new CreateClotheBloc();
 
   @override
@@ -51,6 +51,7 @@ class _CreateClotheViewState extends State<CreateClotheView> {
       setState(() {
         _imageController.text = "Local Image";
         _image = base64Encode(bytes);
+        _isLocalImage = true;
       });
     }catch(e){
       setState(() {
@@ -63,12 +64,13 @@ class _CreateClotheViewState extends State<CreateClotheView> {
     setState(() {
       _imageController.text = "";
       _image = null;
+      _isLocalImage = false;
     });
   }
 
   void createClothe(BuildContext context) async{
     ClotheDao clotheDao = new ClotheDao();
-    Clothe clothe = new Clothe(_nameController.text, _priceController.text, _linkController.text, _imageController.text, _image, _currentType);
+    Clothe clothe = new Clothe(_nameController.text, _priceController.text, _linkController.text, _image,_isLocalImage, _currentType);
     await clotheDao.insert(clothe);
     Navigator.pushAndRemoveUntil(
       context,
@@ -95,8 +97,9 @@ class _CreateClotheViewState extends State<CreateClotheView> {
       setState(() {
         _nameController.text = response["data"]["title"];
         _priceController.text = response["data"]["price"];
+        _isLocalImage = false;
         _imageController.text = response["data"]["image"];
-        _image = null;
+        _image = response["data"]["image"];
       });
     }else{
       setState(() {
@@ -135,7 +138,9 @@ class _CreateClotheViewState extends State<CreateClotheView> {
                 crossAxisAlignment: CrossAxisAlignment.center,
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: <Widget>[
-                  ProductImage(image: _image,imageText: _imageController.text,),
+                  ProductImage(image: _image,
+                    isLocalImage: _isLocalImage,
+                  ),
                   StylishFormInput(name:"Link",controller: _linkController,
                       suffix: IconButton(
                         icon: Icon(Icons.content_paste),

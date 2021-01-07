@@ -6,15 +6,15 @@ class Clothe {
   String _price;
   String _link;
   String _image;
+  bool _isLocalImage;
   String _category;
-  String _imageFile;
 
   Clothe(
     this._name,
     this._price,
     this._link,
     this._image,
-    this._imageFile,
+    this._isLocalImage,
     this._category,
   );
 
@@ -28,7 +28,7 @@ class Clothe {
     this._price = obj['price'];
     this._link = obj['link'];
     this._image = obj['image'];
-    this._imageFile = obj['imageFile'];
+    this._isLocalImage = obj['isLocalImage'];
     this._category = obj['category'];
   }
 
@@ -37,7 +37,7 @@ class Clothe {
   String get price => _price;
   String get link => _link;
   String get image => _image;
-  String get imageFile => _imageFile;
+  bool get isLocalImage => _isLocalImage;
   String get category => _category;
 
   Map<String, dynamic> toMap() {
@@ -49,7 +49,7 @@ class Clothe {
     map["price"] = price;
     map["link"] = link;
     map["image"] = image;
-    map["imageFile"] = imageFile;
+    map["isLocalImage"] = isLocalImage;
     map["category"] = category;
 
     return map;
@@ -61,7 +61,7 @@ class Clothe {
     this._price = map['price'];
     this._link = map['link'];
     this._image = map['image'];
-    this._imageFile = map['imageFile'];
+    this._isLocalImage = map['isLocalImage'];
     this._category = map['category'];
   }
 

@@ -1,5 +1,4 @@
 import 'dart:developer';
-
 import 'package:sembast/sembast.dart';
 import 'package:stylish/DB/AppDatabase.dart';
 import 'package:stylish/DB/DataAccessObject/CategoryDao.dart';
@@ -44,13 +43,13 @@ class ClotheDao {
 
   Future<Clothe> getClothe(int clotheId) async {
     final finder = Finder(filter: Filter.byKey(clotheId));
-    final recordSnapshot =
-        await _clotheStore.findFirst(await _db, finder: finder);
-
-    Clothe clothe= Clothe.fromMap(recordSnapshot.value);
-    clothe.id = clotheId;
-
-    return clothe;
+    final recordSnapshot = await _clotheStore.findFirst(await _db, finder: finder);
+    if(recordSnapshot != null && recordSnapshot.value != null){
+      Clothe clothe= Clothe.fromMap(recordSnapshot.value);
+      clothe.id = clotheId;
+      return clothe;
+    }
+    return null;
   }
 
   Future<List<Clothe>> getClothes(List<int> clothesIds) async {
@@ -65,9 +64,6 @@ class ClotheDao {
   }
 
   Future delete(Clothe clothe) async {
-    //delete the clothe
-    final finder = Finder(filter: Filter.byKey(clothe.id));
-    await _clotheStore.delete(await _db, finder: finder);
 
     //delete the clothe from the category
     CategoryDao categoryDao = new CategoryDao();
@@ -77,6 +73,13 @@ class ClotheDao {
 
     //update the category on db
     categoryDao.update(category);
+
+
+    //delete the clothe
+    final finder = Finder(filter: Filter.byKey(clothe.id));
+    await _clotheStore.delete(await _db, finder: finder);
+
+
   }
 
   Future<bool> deleteAllClothes() async {

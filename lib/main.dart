@@ -1,23 +1,29 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:stylish/DB/DataAccessObject/CategoryClotheDao.dart';
 import 'package:stylish/Utils/global.dart';
 import 'package:stylish/View/CreateClotheView/CreateClotheView.dart';
+import 'package:stylish/View/HomeView/bloc/HomeBloc.dart';
 import 'package:stylish/View/SettingsView/SettingsView.dart';
-
 import 'View/HomeView/HomeView.dart';
 
 void main() {
   runApp(ScreenUtilInit(
     designSize: Size(1125, 2436),
     allowFontScaling: false,
-    child:  MaterialApp(
-        theme: stylishTheme,
-        title: 'Stylish',
-        debugShowCheckedModeBanner: false,
-        home: new TabControllerApp(),
-      ),
+    child:BlocProvider(
+        create: (context) => HomeBloc(repository: CategoryClotheDao()),
+        child:MaterialApp(
+            theme: stylishTheme,
+            title: 'Stylish',
+            debugShowCheckedModeBanner: false,
+            home: new TabControllerApp()
+        )
+    ),
   ));
 }
+
 
 class TabControllerApp extends StatefulWidget {
   @override
