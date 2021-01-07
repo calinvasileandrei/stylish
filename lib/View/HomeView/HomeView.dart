@@ -28,14 +28,16 @@ class _HomeViewState extends State<HomeView> {
   @override
   void dispose() {
     homeBloc.dispose();
+    log("disposed");
     super.dispose();
   }
 
   @override
   Widget build(BuildContext context) {
-    return StreamBuilder<Object>(
+    homeBloc.eventSink.add(HomeEvent.Fetch);
+    return StreamBuilder<List<CategoryClothes>>(
         stream: homeBloc.homeStream,
-        builder: (context, snapshot) {
+        builder: (context, AsyncSnapshot<List<CategoryClothes>> snapshot) {
           if (snapshot.hasData) {
             return StylishSkeleton(
               subtitle: "Choose your outfit",

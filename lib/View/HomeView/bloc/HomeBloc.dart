@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'dart:developer';
 import 'package:stylish/DB/DataAccessObject/CategoryClotheDao.dart';
 import 'package:stylish/Models/CategoryClothes.dart';
 
@@ -28,7 +29,8 @@ class HomeBloc {
         case HomeEvent.Fetch:
           {
             CategoryClotheDao repository = new CategoryClotheDao();
-            _homeSink.add(await repository.getHomeViewCategory());
+            final categoryClothesData=await repository.getHomeViewCategory();
+            _homeSink.add(categoryClothesData);
           }
           break;
 

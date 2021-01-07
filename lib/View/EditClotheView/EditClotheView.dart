@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'dart:developer';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:stylish/DB/DataAccessObject/ClotheDao.dart';
@@ -15,16 +16,17 @@ import 'package:stylish/View/CreateClotheView/Components/ProductImage.dart';
 import 'package:stylish/View/CreateClotheView/Components/StylishFormInput.dart';
 import 'package:stylish/View/CreateClotheView/Components/StylishLargeButton.dart';
 import 'package:stylish/View/CreateClotheView/bloc/CreateClotheBloc.dart';
+import 'package:stylish/View/HomeView/bloc/HomeBloc.dart';
 import 'package:stylish/main.dart';
 
 //TODO Convert from CreateClotheView to EditClotheView
 
 class EditClotheView extends StatefulWidget {
-  //TODO: add parameters
-  EditClotheView({Key key}) : super(key: key);
+  Clothe clothe;
+  EditClotheView({Key key,this.clothe}) : super(key: key);
 
   @override
-  _EditClotheViewState createState() => _EditClotheViewState();
+  _EditClotheViewState createState() => _EditClotheViewState(clothe);
 }
 
 class _EditClotheViewState extends State<EditClotheView> {
@@ -34,16 +36,22 @@ class _EditClotheViewState extends State<EditClotheView> {
   TextEditingController _imageController;
   String _image;
   String _currentType;
-  Clothe newClothe = new Clothe("", "", "", "", "", "");
   CreateClotheBloc createClotheBloc = new CreateClotheBloc();
+  Clothe clothe;
+  bool isEdit=false;
+  _EditClotheViewState(this.clothe);
+
 
   @override
   void initState() {
     super.initState();
-    _nameController = new TextEditingController(text: newClothe.name);
-    _priceController = new TextEditingController(text: newClothe.price);
-    _linkController = new TextEditingController(text: newClothe.link);
-    _imageController = new TextEditingController(text: newClothe.image);
+    setState(() {
+      _nameController = new TextEditingController(text: clothe.name);
+      _priceController = new TextEditingController(text: clothe.price);
+      _linkController = new TextEditingController(text: clothe.link);
+      _imageController = new TextEditingController(text: clothe.image);
+      _currentType=clothe.category;
+    });
   }
 
   void getImage() async {
@@ -68,15 +76,14 @@ class _EditClotheViewState extends State<EditClotheView> {
     });
   }
 
-  void createClothe(BuildContext context) async{
+  void updateClothe(BuildContext context,Clothe oldClothe) async{
     ClotheDao clotheDao = new ClotheDao();
-    Clothe clothe = new Clothe(_nameController.text, _priceController.text, _linkController.text, _imageController.text, _image, _currentType);
-    await clotheDao.insert(clothe);
-    Navigator.pushAndRemoveUntil(
-      context,
-      MaterialPageRoute(builder: (context) => TabControllerApp()),
-          (Route<dynamic> route) => false,
-    );
+    Clothe _clothe = new Clothe(_nameController.text, _priceController.text, _linkController.text, _imageController.text, _image, _currentType);
+    _clothe.id =oldClothe.id;
+    if(_clothe!=oldClothe){
+      await clotheDao.update(_clothe);
+    }
+    setState(()=> isEdit=false);
   }
 
   void scrapeData() async{
@@ -138,27 +145,28 @@ class _EditClotheViewState extends State<EditClotheView> {
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: <Widget>[
                     ProductImage(image: _image,imageText: _imageController.text,),
-                    StylishFormInput(name:"Link",controller: _linkController,
+                    StylishFormInput(name:"Link",controller: _linkController, disabled: !isEdit,
                         suffix: IconButton(
                           icon: Icon(Icons.content_paste),
                           onPressed: () => {scrapeData()},
                         )),
-                    StylishFormInput(name:"Name",controller: _nameController),
-                    StylishFormInput(name:"Price",controller:_priceController),
+                    StylishFormInput(name:"Name",controller: _nameController, disabled: !isEdit),
+                    StylishFormInput(name:"Price",controller:_priceController, disabled: !isEdit),
                     (_image == null || _image == '')
-                        ? StylishFormInput(name:"Image", controller: _imageController,
+                        ? StylishFormInput(name:"Image", controller: _imageController, disabled: !isEdit,
                         suffix: IconButton(
                           icon: Icon(Icons.image),
                           tooltip: 'Pick Image',
-                          onPressed: getImage,
+                          onPressed: !isEdit? getImage:null,
                         ))
                         : StylishFormInput(name:"Image", controller: _imageController,
                       suffix: IconButton(
                           icon: Icon(Icons.delete),
                           tooltip: 'Remove Image',
-                          onPressed: removeImage), disabled: true,),
-                    DropDownCategories(callback:  (val) => setState(() => _currentType = val),currentType: _currentType,),
-                    StylishLargeButton(buttonText: "Edit",callback: ()=>createClothe(context))
+                          onPressed: !isEdit? removeImage:null), disabled: !isEdit,),
+                    DropDownCategories(callback: (val) => setState(() => _currentType = val),currentType: _currentType,),
+                    !isEdit? StylishLargeButton(buttonText: "Edit",callback: ()=>setState(()=>isEdit=true)):
+                        StylishLargeButton(buttonText: "Save Edits",callback: ()=>updateClothe(context, clothe)),
 
                   ],
                 )))

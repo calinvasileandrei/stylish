@@ -2,6 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'dart:convert';
 import 'package:stylish/Models/Clothe.dart';
+import 'package:stylish/View/EditClotheView/EditClotheView.dart';
+import 'package:url_launcher/url_launcher.dart';
 
 class ClotheWidget extends StatelessWidget {
   ClotheWidget(this.index, this.clothe);
@@ -47,11 +49,17 @@ class ClotheWidget extends StatelessWidget {
             ),
           ),
         ),
-        onTap: () =>
-            {} //{_navigateToClothe(context, _items[index], _items, index)},
+        onTap: () => Navigator.push(context, new MaterialPageRoute(builder: (context)=>new EditClotheView(clothe: clothe,))) //{_navigateToClothe(context, _items[index], _items, index)},
         );
   }
 
+  void _launchURL(link) async {
+    if (await canLaunch(link)) {
+      await launch(link);
+    } else {
+      throw 'Could not launch $link';
+    }
+  }
   Widget _buildFloatingImage() {
     return Container(
       child: ClipRRect(
@@ -132,7 +140,7 @@ class ClotheWidget extends StatelessWidget {
                   Icons.exit_to_app,
                   color: (index % 2 == 0) ? Colors.black : Colors.white,
                 ),
-                onPressed: () => {} //_launchURL(index, _items),
+                onPressed: () => _launchURL(clothe.link) //_launchURL(index, _items),
                 )
           ],
         ),
