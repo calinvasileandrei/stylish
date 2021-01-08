@@ -5,8 +5,6 @@ import 'package:stylish/DB/DataAccessObject/CategoryDao.dart';
 import 'package:stylish/Utils/StylishSkeleton.dart';
 import 'package:stylish/Models/Category.dart';
 import 'package:stylish/Utils/global.dart';
-import 'package:stylish/View/CreateClotheView/Components/StylishLargeButton.dart';
-import 'package:stylish/View/CreateClotheView/bloc/CreateClotheBloc.dart';
 
 class ManageCategoriesView extends StatefulWidget {
   @override
@@ -73,33 +71,37 @@ class _ManageCategoriesViewState extends State<ManageCategoriesView> {
           icon: Icon(Icons.sort_by_alpha,color: Colors.black,),
           onPressed: sorting,
         ),
-        child: FutureBuilder<List<Category>>(
-          future: loadData(),
-          builder: (context, snapshot) {
-            if(snapshot!=null && snapshot.hasData){
-              categories = snapshot.data;
-             return ReorderableListView(
-              onReorder: reorderData,
-              children:<Widget> [
-                for(final item in categories)
-                  Card(
-                    shape: stylishCardShape ,
-                    color: Colors.white,
-                    key: ValueKey(item.name),
-                    elevation: 3,
-                    child: ListTile(
-                      title: Text(item.name),
-                      leading: Icon(Icons.sort,color: Colors.black,),
+        child: Container(
+          //TODO: check if with a long list be floating button creates problems
+          margin: EdgeInsets.fromLTRB(12.w,48.h,12.w,48.h),
+          child: FutureBuilder<List<Category>>(
+            future: loadData(),
+            builder: (context, snapshot) {
+              if(snapshot!=null && snapshot.hasData){
+                categories = snapshot.data;
+               return ReorderableListView(
+                onReorder: reorderData,
+                children:<Widget> [
+                  for(final item in categories)
+                    Card(
+                      shape: stylishCardShape ,
+                      color: Colors.white,
+                      key: ValueKey(item.name),
+                      elevation: 3,
+                      child: ListTile(
+                        title: Text(item.name),
+                        leading: Icon(Icons.sort,color: Colors.black,),
+                      ),
                     ),
-                  ),
-              ],
-            );
-            }else if(snapshot!=null && snapshot.hasError){
-              return Center(child: Text("Error Loading data..."),);
-            }else {
-              return Center(child: CircularProgressIndicator(),);
+                ],
+              );
+              }else if(snapshot!=null && snapshot.hasError){
+                return Center(child: Text("Error Loading data..."),);
+              }else {
+                return Center(child: CircularProgressIndicator(),);
+              }
             }
-          }
+          ),
         )
       ),
     );

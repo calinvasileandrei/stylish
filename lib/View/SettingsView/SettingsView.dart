@@ -25,10 +25,10 @@ class _SettingsViewState extends State<SettingsView> {
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
               ClipRRect(
-                borderRadius: BorderRadius.circular(12.0),
+                borderRadius: stylishBorderRadius,
                 child: Image.asset(
                   'assets/logo_white512.png',
-                  width: ScreenUtil().setWidth(1200.w),
+                  width: 450.w,
                   fit: BoxFit.contain,
                 ),
               )

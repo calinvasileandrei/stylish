@@ -15,6 +15,7 @@ class DropDownCategories extends StatefulWidget {
 }
 
 class _DropDownCategoriesState extends State<DropDownCategories> {
+  //TODO: change from bloc pattern to a simple Future , setstate object pattern, it's overkill
   CreateClotheBloc createClotheBloc = new CreateClotheBloc();
 
   @override
