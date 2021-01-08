@@ -54,7 +54,6 @@ class _StylishBouncingButtonState extends State<StylishBouncingButton> with Sing
     return Container(
       height: 140.h,
       width: buttonWidth,
-      margin: EdgeInsets.only(top: 100.h),
       decoration: BoxDecoration(
           color: Color(0xFFfa7b58),
           shape: BoxShape.rectangle,

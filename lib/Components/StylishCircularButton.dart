@@ -11,8 +11,7 @@ class StylishCircularButton extends StatelessWidget {
     return Container(
       width: 180.w,
       height: 180.h,
-      margin: EdgeInsets.only(bottom: 70.h),
-      decoration: BoxDecoration(
+     decoration: BoxDecoration(
           color: Color(0xFFfa7b58),
           shape: BoxShape.circle,
           boxShadow: [

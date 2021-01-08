@@ -22,7 +22,7 @@ class CreateClotheBloc {
         case CreateClotheEvent.Fetch:
           {
             CategoryDao repository = new CategoryDao();
-            _mainSink.add(await repository.getAllCategoriesNames());
+            _mainSink.add(await repository.getAllNamesSortedByPosition());
           }
           break;
 

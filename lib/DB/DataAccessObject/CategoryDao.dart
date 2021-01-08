@@ -13,22 +13,22 @@ class CategoryDao {
 
   Future<Database> get _db async => await AppDatabase.instance.database;
 
-  Future insert(Category category) async {
+  Future<int> insert(Category category) async {
     //find how many categories, the new category will be the last one
     final position = await countElements();
     category.position = position+1;
     //adding the category
-    await _categoryStore.add(await _db, category.toMap());
+    return await _categoryStore.add(await _db, category.toMap());
   }
 
-  Future update(Category category) async {
+  Future<int> update(Category category) async {
     final finder = Finder(filter: Filter.byKey(category.id));
-    await _categoryStore.update(await _db, category.toMap(), finder: finder);
+    return await _categoryStore.update(await _db, category.toMap(), finder: finder);
   }
 
-  Future delete(Category category) async {
+  Future<int> delete(Category category) async {
     final finder = Finder(filter: Filter.byKey(category.id));
-    await _categoryStore.delete(await _db, finder: finder);
+    return await _categoryStore.delete(await _db, finder: finder);
   }
 
   Future<bool> deleteAllCategory() async {
@@ -80,6 +80,17 @@ class CategoryDao {
     }).toList();
   }
 
+  Future<List<String>> getAllNamesSortedByPosition() async {
+    final finder = Finder(sortOrders: [SortOrder('position')]);
+
+    final recordSnapshots =
+    await _categoryStore.find(await _db, finder: finder);
+
+    return recordSnapshots.map((snapshot) {
+      final category = Category.fromMap(snapshot.value);
+      return category.name;
+    }).toList();
+  }
   Future<List<String>> getAllCategoriesNames() async {
     final finder = Finder();
     final recordSnapshots =

@@ -17,6 +17,10 @@ class Category {
     this._id = id;
   }
 
+  void set name(String name) {
+    this._name = name;
+  }
+
   void set position(int position) {
     this._position = position;
   }
@@ -54,6 +58,6 @@ class Category {
   }
 
   @override
-  String toString() => 'Category(name: $_name, clothes: $_clothes)';
+  String toString() => 'Category(name: $_name, position: $_position, clothes: $_clothes)';
 
 }

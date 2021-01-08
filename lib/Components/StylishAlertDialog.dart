@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:stylish/Utils/global.dart';
 
 class StylishAlertDialog extends StatelessWidget {
   final title;
@@ -10,9 +11,9 @@ class StylishAlertDialog extends StatelessWidget {
   Widget build(BuildContext context) {
     return AlertDialog(
       shape: RoundedRectangleBorder(
-          borderRadius: BorderRadius.all(Radius.circular(14.0))),
-      title: new Text("Delete Item"),
-      content: new Text("Are you sure to delete this Item?"),
+          borderRadius: stylishBorderRadius),
+      title: new Text(title),
+      content: new Text(content),
       actions: <Widget>[
         leftButton,
         rightButton

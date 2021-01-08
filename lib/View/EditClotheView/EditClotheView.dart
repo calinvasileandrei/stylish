@@ -14,8 +14,8 @@ import 'package:image_picker_modern/image_picker_modern.dart';
 import 'package:stylish/Utils/global.dart';
 import 'package:stylish/View/CreateClotheView/Components/DropDownCategories.dart';
 import 'package:stylish/View/CreateClotheView/Components/ProductImage.dart';
-import 'package:stylish/View/CreateClotheView/Components/StylishFormInput.dart';
-import 'package:stylish/View/CreateClotheView/Components/StylishLargeButton.dart';
+import 'package:stylish/Components/StylishFormInput.dart';
+import 'package:stylish/Components/StylishLargeButton.dart';
 import 'package:stylish/View/CreateClotheView/bloc/CreateClotheBloc.dart';
 import 'package:stylish/View/HomeView/bloc/HomeBloc.dart';
 

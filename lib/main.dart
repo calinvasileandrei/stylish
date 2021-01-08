@@ -35,10 +35,13 @@ class _TabControllerAppState extends State<TabControllerApp> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      floatingActionButton: StylishCircularButton(icon:Icons.add,callBack: ()=> Navigator.push(
-        context,
-        MaterialPageRoute(builder: (context) => new CreateClotheView()),
-      )),
+      floatingActionButton: Container(
+        margin: EdgeInsets.only(bottom: 70.h),
+        child: StylishCircularButton(icon:Icons.add,callBack: ()=> Navigator.push(
+          context,
+          MaterialPageRoute(builder: (context) => new CreateClotheView()),
+        )),
+      ),
       floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,
       body: DefaultTabController(
         length: 2,
