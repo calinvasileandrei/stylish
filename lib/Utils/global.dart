@@ -1,5 +1,11 @@
 import 'package:flutter/material.dart';
 
+RoundedRectangleBorder stylishCardShape = RoundedRectangleBorder(
+  borderRadius: stylishBorderRadius,
+);
+
+BorderRadius stylishBorderRadius = BorderRadius.circular(12.0);
+
 ThemeData stylishTheme = ThemeData(
   primaryColor: Colors.white,
   primaryColorDark: Colors.black,

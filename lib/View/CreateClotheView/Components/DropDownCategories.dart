@@ -2,6 +2,7 @@ import 'dart:async';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:stylish/Utils/global.dart';
 import 'package:stylish/View/CreateClotheView/bloc/CreateClotheBloc.dart';
 
 class DropDownCategories extends StatefulWidget {
@@ -50,7 +51,7 @@ class _DropDownCategoriesState extends State<DropDownCategories> {
         padding: new EdgeInsets.only(left: 50.w, right: 50.w),
         decoration: BoxDecoration(
           color: Colors.white,
-          borderRadius: BorderRadius.circular(32.0),
+          borderRadius: stylishBorderRadius,
           border: Border.all(
               color: Colors.grey,
               style: BorderStyle.solid,

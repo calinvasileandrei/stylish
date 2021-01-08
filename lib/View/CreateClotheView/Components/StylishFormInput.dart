@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:stylish/Utils/global.dart';
 
 class StylishFormInput extends StatelessWidget {
   TextEditingController controller;
@@ -22,7 +23,7 @@ class StylishFormInput extends StatelessWidget {
               fillColor: Colors.white,
               contentPadding: EdgeInsets.fromLTRB(50.w, 37.h, 50.w, 37.h),
               border:
-              OutlineInputBorder(borderRadius: BorderRadius.circular(32.0)),
+              OutlineInputBorder(borderRadius: stylishBorderRadius),
               suffixIcon: suffix),
         ));
   }

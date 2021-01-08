@@ -1,6 +1,7 @@
 import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:stylish/Utils/global.dart';
 
 class ProductImage extends StatelessWidget {
   final image;
@@ -17,7 +18,7 @@ class ProductImage extends StatelessWidget {
                 borderRadius: new BorderRadius.circular(9.0),
                 child: (image == "" || image == null)
                     ? ClipRRect(
-                        borderRadius: new BorderRadius.circular(9.0),
+                        borderRadius: stylishBorderRadius,
                         child: LimitedBox(
                             child: Image.asset(
                               "assets/logo_white512.png",
@@ -27,7 +28,7 @@ class ProductImage extends StatelessWidget {
                       )
                     : isLocalImage
                         ? ClipRRect(
-                            borderRadius: new BorderRadius.circular(9.0),
+                            borderRadius: stylishBorderRadius,
                             child: LimitedBox(
                                 child: Image.memory(
                                   base64Decode(image),
@@ -35,12 +36,15 @@ class ProductImage extends StatelessWidget {
                                 ),
                                 maxHeight: 550.h),
                           )
-                        : FadeInImage.assetNetwork(
-                            placeholder: 'assets/logo_white512.png',
-                            image: image,
-                            height: 550.w,
-                            fit: BoxFit.contain,
-                          )),
+                        : ClipRRect(
+                          borderRadius: stylishBorderRadius,
+                          child: FadeInImage.assetNetwork(
+                              placeholder: 'assets/logo_white512.png',
+                              image: image,
+                              height: 550.w,
+                              fit: BoxFit.contain,
+                            ),
+                        )),
             decoration: new BoxDecoration(
               boxShadow: [
                 BoxShadow(

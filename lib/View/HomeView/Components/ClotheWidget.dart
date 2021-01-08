@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'dart:convert';
 import 'package:stylish/Models/Clothe.dart';
+import 'package:stylish/Utils/global.dart';
 import 'package:stylish/View/EditClotheView/EditClotheView.dart';
 import 'package:url_launcher/url_launcher.dart';
 
@@ -35,7 +36,7 @@ class ClotheWidget extends StatelessWidget {
                               offset: Offset(0.0, 10.0),
                               blurRadius: 10.0)
                         ],
-                        borderRadius: BorderRadius.circular(12.0)),
+                        borderRadius: stylishBorderRadius),
                   ),
                 ),
                 Column(
@@ -73,10 +74,10 @@ class ClotheWidget extends StatelessWidget {
   Widget _buildFloatingImage() {
     return Container(
       child: ClipRRect(
-          borderRadius: new BorderRadius.circular(9.0),
+          borderRadius: stylishBorderRadius,
           child: (clothe.image == "" ||clothe.image == null)
               ? ClipRRect(
-            borderRadius: new BorderRadius.circular(9.0),
+            borderRadius: stylishBorderRadius,
             child: LimitedBox(
                 child: Image.asset(
                   "assets/logo_white512.png",
@@ -87,7 +88,7 @@ class ClotheWidget extends StatelessWidget {
           )
               : clothe.isLocalImage
               ? ClipRRect(
-            borderRadius: new BorderRadius.circular(9.0),
+            borderRadius: stylishBorderRadius,
             child: LimitedBox(
                 child: Image.memory(
                   base64Decode(clothe.image),
@@ -125,7 +126,6 @@ class ClotheWidget extends StatelessWidget {
                   clothe.name,
                   style: TextStyle(
                       fontSize: 40.sp,
-                      fontFamily: "Montserrat-Bold",
                       color:
                           (index % 2 == 0) ? Color(0xFF2a2d3f) : Colors.white),
                 )
@@ -135,7 +135,6 @@ class ClotheWidget extends StatelessWidget {
                     clothe.name,
                     style: TextStyle(
                         fontSize: 40.sp,
-                        fontFamily: "Montserrat-Bold",
                         color: (index % 2 == 0)
                             ? Color(0xFF2a2d3f)
                             : Colors.white),
@@ -145,7 +144,6 @@ class ClotheWidget extends StatelessWidget {
         Text(clothe.category,
             style: TextStyle(
                 fontSize: 35.sp,
-                fontFamily: "Montserrat-Medium",
                 color: (index % 2 == 0) ? Color(0xFF2a2d3f) : Colors.white)),
         Row(
           children: <Widget>[
@@ -153,7 +151,6 @@ class ClotheWidget extends StatelessWidget {
               child: Text(clothe.price,
                   style: TextStyle(
                       fontSize: 60.sp,
-                      fontFamily: "Montserrat-Bold",
                       color:
                           (index % 2 == 0) ? Color(0xFF2a2d3f) : Colors.white)),
             ),

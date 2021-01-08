@@ -3,18 +3,20 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 class StylishBouncingButton extends StatefulWidget {
   final buttonText;
   final callback;
-  StylishBouncingButton({Key key,@required this.buttonText,this.callback});
+  final width;
+  StylishBouncingButton({Key key,@required this.buttonText,@required this.width,this.callback});
 
   @override
-  _StylishBouncingButtonState createState() => _StylishBouncingButtonState(buttonText,callback);
+  _StylishBouncingButtonState createState() => _StylishBouncingButtonState(buttonText,width,callback);
 }
 class _StylishBouncingButtonState extends State<StylishBouncingButton> with SingleTickerProviderStateMixin {
   String buttonText;
   final callback;
+  final buttonWidth;
   double _scale;
   AnimationController _controller;
 
-  _StylishBouncingButtonState(this.buttonText,this.callback);
+  _StylishBouncingButtonState(@required this.buttonText,@required this.buttonWidth,this.callback);
 
   @override
   void initState() {
@@ -51,7 +53,7 @@ class _StylishBouncingButtonState extends State<StylishBouncingButton> with Sing
   Widget  _animatedButton() {
     return Container(
       height: 140.h,
-      width: ScreenUtil().screenWidth * 0.90,
+      width: buttonWidth,
       margin: EdgeInsets.only(top: 100.h),
       decoration: BoxDecoration(
           color: Color(0xFFfa7b58),

@@ -4,6 +4,7 @@ import 'package:stylish/Components/StylishBouncingButton.dart';
 import 'package:stylish/DB/DataAccessObject/CategoryDao.dart';
 import 'package:stylish/Utils/StylishSkeleton.dart';
 import 'package:stylish/Models/Category.dart';
+import 'package:stylish/Utils/global.dart';
 import 'package:stylish/View/CreateClotheView/Components/StylishLargeButton.dart';
 import 'package:stylish/View/CreateClotheView/bloc/CreateClotheBloc.dart';
 
@@ -58,7 +59,7 @@ class _ManageCategoriesViewState extends State<ManageCategoriesView> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      floatingActionButton: StylishBouncingButton(buttonText:"Save",callback: ()=>savePosition() ,),
+      floatingActionButton: StylishBouncingButton(buttonText:"Save",callback: ()=>savePosition(), width:(ScreenUtil().screenWidth * 0.7)),
       floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,
       body: StylishSkeleton(
         subtitle: "Manage Categories",
@@ -82,9 +83,10 @@ class _ManageCategoriesViewState extends State<ManageCategoriesView> {
               children:<Widget> [
                 for(final item in categories)
                   Card(
+                    shape: stylishCardShape ,
                     color: Colors.white,
                     key: ValueKey(item.name),
-                    elevation: 2,
+                    elevation: 3,
                     child: ListTile(
                       title: Text(item.name),
                       leading: Icon(Icons.sort,color: Colors.black,),
