@@ -6,6 +6,7 @@ class Category {
   int _id;
   String _name;
   List<int> _clothes;
+  int _position;
 
   Category(
     this._name,
@@ -14,6 +15,10 @@ class Category {
 
   void set id(int id) {
     this._id = id;
+  }
+
+  void set position(int position) {
+    this._position = position;
   }
 
   void addNewClothe(int clotheId) {
@@ -27,6 +32,7 @@ class Category {
   int get id => this._id;
   String get name => _name;
   List<int> get clothes => _clothes;
+  int get position => this._position;
 
   Map<String, dynamic> toMap() {
     var map = new Map<String, dynamic>();
@@ -35,6 +41,7 @@ class Category {
     }
     map["name"] = name;
     map["clothes"] = clothes;
+    map["position"] = position;
 
     return map;
   }
@@ -43,7 +50,7 @@ class Category {
     this._id = map['id'];
     this._name = map['name'];
     this._clothes = new List<int>.from(map['clothes']);
-
+    this._position = map['position'];
   }
 
   @override

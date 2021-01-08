@@ -9,7 +9,7 @@ class StylishLargeButton extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-      width: ScreenUtil().screenWidth * 0.95,
+      width: ScreenUtil().screenWidth * 0.90,
       height: 140.h,
       margin: EdgeInsets.only(top: 100.h),
       decoration: BoxDecoration(

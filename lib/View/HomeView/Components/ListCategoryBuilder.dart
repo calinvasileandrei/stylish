@@ -22,10 +22,8 @@ class _ListCategoryBuilderState extends State<ListCategoryBuilder> {
 
   @override
   void initState() {
-    // TODO: implement initState
     super.initState();
     placeholderList.add(placeholderClothe);
-    log(widget.categoryClothes.toString());
   }
 
   @override

@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:stylish/Components/StylishCircularButton.dart';
 import 'package:stylish/DB/DataAccessObject/CategoryClotheDao.dart';
 import 'package:stylish/Utils/global.dart';
 import 'package:stylish/View/CreateClotheView/CreateClotheView.dart';
@@ -34,7 +35,10 @@ class _TabControllerAppState extends State<TabControllerApp> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      floatingActionButton: _buildFloatingActionButton(context),
+      floatingActionButton: StylishCircularButton(icon:Icons.add,callBack: ()=> Navigator.push(
+        context,
+        MaterialPageRoute(builder: (context) => new CreateClotheView()),
+      )),
       floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,
       body: DefaultTabController(
         length: 2,
@@ -98,34 +102,4 @@ class _TabControllerAppState extends State<TabControllerApp> {
     );
   }
 
-  Widget _buildFloatingActionButton(BuildContext context) {
-    return Container(
-      width: 180.w,
-      height: 180.h,
-      margin: EdgeInsets.only(bottom: 70.h),
-      decoration: BoxDecoration(
-          color: Color(0xFFfa7b58),
-          shape: BoxShape.circle,
-          boxShadow: [
-            BoxShadow(
-                color: Color(0xFFf78a6c).withOpacity(.6),
-                offset: Offset(0.0, 10.0),
-                blurRadius: 10.0)
-          ]),
-      child: RawMaterialButton(
-        shape: CircleBorder(),
-        child: Icon(
-          Icons.add,
-          size: 90.w,
-          color: Colors.white,
-        ),
-        onPressed: () {
-          Navigator.push(
-            context,
-            MaterialPageRoute(builder: (context) => new CreateClotheView()),
-          );
-        },
-      ),
-    );
-  }
 }

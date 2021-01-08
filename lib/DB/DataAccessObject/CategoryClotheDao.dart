@@ -1,5 +1,3 @@
-import 'dart:developer';
-
 import 'package:stylish/DB/DataAccessObject/CategoryDao.dart';
 import 'package:stylish/DB/DataAccessObject/ClotheDao.dart';
 import 'package:stylish/Models/Category.dart';
@@ -12,7 +10,7 @@ class CategoryClotheDao {
     CategoryDao categoryDao = new CategoryDao();
     ClotheDao clotheDao = new ClotheDao();
 
-    List<Category> categorys = await categoryDao.getAllSortedByName();
+    List<Category> categorys = await categoryDao.getAllSortedByPosition();
 
     categorys.forEach((category) async {
       List<Clothe> clothes = await clotheDao.getClothes(category.clothes);

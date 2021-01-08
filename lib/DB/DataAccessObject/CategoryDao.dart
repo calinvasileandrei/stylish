@@ -14,6 +14,10 @@ class CategoryDao {
   Future<Database> get _db async => await AppDatabase.instance.database;
 
   Future insert(Category category) async {
+    //find how many categories, the new category will be the last one
+    final position = await countElements();
+    category.position = position+1;
+    //adding the category
     await _categoryStore.add(await _db, category.toMap());
   }
 
@@ -50,6 +54,19 @@ class CategoryDao {
     }
   }
 
+  Future<List<Category>> getAllSortedByPosition() async {
+    final finder = Finder(sortOrders: [SortOrder('position')]);
+
+    final recordSnapshots =
+    await _categoryStore.find(await _db, finder: finder);
+
+    return recordSnapshots.map((snapshot) {
+      final category = Category.fromMap(snapshot.value);
+      category.id = snapshot.key;
+      return category;
+    }).toList();
+  }
+
   Future<List<Category>> getAllSortedByName() async {
     final finder = Finder(sortOrders: [SortOrder('name')]);
 
@@ -65,14 +82,17 @@ class CategoryDao {
 
   Future<List<String>> getAllCategoriesNames() async {
     final finder = Finder();
-
     final recordSnapshots =
     await _categoryStore.find(await _db, finder: finder);
 
-    return recordSnapshots.map((snapshot) {
+    final categories= recordSnapshots.map((snapshot) {
       final category = Category.fromMap(snapshot.value);
       return category.name;
     }).toList();
+
+
+    return categories;
+
   }
 
   Future<int> countElements() async {
