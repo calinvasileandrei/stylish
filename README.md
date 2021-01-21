@@ -18,11 +18,11 @@ samples, guidance on mobile development, and a full API reference.
 
 ## App Preview:
 
-![alt text](https://github.com/calinvasileandrei/stylish/assets/app1.png)
+![alt text](https://github.com/calinvasileandrei/stylish/blob/main/assets/app1.png)
 
-![alt text](https://github.com/calinvasileandrei/stylish/assets/app2.png)
+![alt text](https://github.com/calinvasileandrei/stylish/blob/main/assets/app2.png)
 
 
 ## Video Preview
 
-[![Watch the video](https://github.com/calinvasileandrei/stylish/ssets/play.png)](https://www.youtube.com/watch?v=TWNNarZmcRQ&feature=youtu.be)
+[![Watch the video](https://github.com/calinvasileandrei/stylish/blob/main/assets/play.png)](https://www.youtube.com/watch?v=TWNNarZmcRQ&feature=youtu.be)
